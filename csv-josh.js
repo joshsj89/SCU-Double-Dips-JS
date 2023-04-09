@@ -10,7 +10,7 @@
 //      cleared. If the file does not exist, a new empty one will be created.
 //
 // METHODS
-//  write()
+//  write(data)
 //      Precondition: The argument must be an array.
 //      Postcondition: Each element of the array is written into a row of the CSV file.
 //
