@@ -1,11 +1,3 @@
-/*
-from tkinter import *
-import tkinter.messagebox
-import csv 
-import requests
-import os 
-*/
-
 const axios = require('axios');
 const Csv = require('./csv-josh.js');
 const prompt = require('prompt-sync')({sigint: true});
@@ -16,15 +8,16 @@ const prompt = require('prompt-sync')({sigint: true});
 // 4340 is the code for Spring Quarter 2022.
 // 4360 is the code for Summer Quarter 2022.
 // 4400 is the code for Fall Quarter 2022.
+// 4420 is the code for Winter Quarter 2023.
+// 4430 is the code for Spring Quarter 2023.
 
 /*
 
-1. We first define a dictionary called quarterMap which maps the academic quarter to the quarter code.
+1. We first define an object called quarterMap which maps the academic quarter to the quarter code.
 2. We then define a function called get_courses which takes in the core code and the quarter code.
-3. We then use the requests library to make a POST request to the SCU website.
+3. We then use the requests library to make a POST request to the SCU CourseAvail website.
 4. We then use the json library to parse the response.
 5. We then return the data from the response.
-6. We then define a function called validateInput which takes in the user input.
 
 */
 
@@ -201,12 +194,6 @@ const validateInput = async () => {
             fp.writerow(course_data);
         }
     });
-
-    /* writes all classes to CSV
-    coursesArr.forEach((course) => {
-        fp.write(course);
-    })
-    */
 
     console.log(`=== Finished fetching core requirements for ${quarter}! ===\n\n`)
 }
