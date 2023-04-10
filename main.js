@@ -186,7 +186,7 @@ const validateInput = async () => {
 
     const fileName = `scu_double_dips-${quarterNameMap[quarter]}`;
     const fp = new Csv(fileName);
-    fp.write(rows); // write header
+    fp.writerow(rows); // write header
 
     const coursesArr = Object.values(courses);
 
@@ -198,7 +198,7 @@ const validateInput = async () => {
                 course_data.push(course[key]);
             });
 
-            fp.write(course_data);
+            fp.writerow(course_data);
         }
     });
 

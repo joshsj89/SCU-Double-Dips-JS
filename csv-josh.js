@@ -49,7 +49,7 @@ class Csv {
         });
     }
 
-    write(data) {
+    writerow(data) {
         let csv = '';
 
         data.forEach((item, i) => {
