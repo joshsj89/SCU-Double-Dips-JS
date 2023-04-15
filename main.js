@@ -1,5 +1,5 @@
 const axios = require('axios');
-const Csv = require('./csv-josh.js');
+const CSVManager = require('./csv-manager.js');
 const prompt = require('prompt-sync')({sigint: true});
 
 // 4260 is the code for Summer Quarter 2021.
@@ -160,8 +160,8 @@ const validateInput = async () => {
     const rows = ["CLASS", "DESCRIPTION", "CORES SATISFIED", "DAYS/TIMES", "ROOM", "INSTRUCTOR", "UNITS", "SEATS REMAINING"];
 
     const fileName = `scu_double_dips-${quarterNameMap[quarter]}`;
-    const fp = new Csv(fileName);
-    fp.writerow(rows); // write header
+    const fp = new CSVManager(fileName);
+    fp.writeRow(rows); // write header
 
     const coursesArr = Object.values(courses);
 
@@ -173,7 +173,7 @@ const validateInput = async () => {
                 course_data.push(course[key]);
             });
 
-            fp.writerow(course_data);
+            fp.writeRow(course_data);
         }
     });
 
