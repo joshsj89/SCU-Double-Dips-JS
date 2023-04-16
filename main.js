@@ -10,6 +10,7 @@ const prompt = require('prompt-sync')({sigint: true});
 // 4400 is the code for Fall Quarter 2022.
 // 4420 is the code for Winter Quarter 2023.
 // 4440 is the code for Spring Quarter 2023.
+// 4460 is the code for Summer Quarter 2023.
 
 /*
 
