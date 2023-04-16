@@ -21,26 +21,24 @@ const prompt = require('prompt-sync')({sigint: true});
 
 */
 
-const quarterMap = {
-    "Spring 2023": "4440",
-    "Winter 2023": "4420",
-    "Fall 2022": "4400",
-    "Summer 2022": "4360",
-    "Spring 2022": "4340",
-    "Winter 2022": "4320",
-    "Fall 2021": "4300",
-    "Summer 2021": "4260" 
-}
+const get_quarter_map = async () => {
+    const headers = {
+        "authority": "www.scu.edu",
+        "accept": "*/*",
+        "x-requested-with": "XMLHttpRequest",
+        "user-agent": process.env.USER_AGENT,
+        "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+        "sec-gpc": "1",
+        "origin": "https://www.scu.edu",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "accept-language": "en-US,en;q=0.9",
+    };
 
-const quarterNameMap = {
-    "Spring 2023": "spring2023",
-    "Winter 2023": "winter2023",
-    "Fall 2022": "fall2022",
-    "Summer 2022": "summer2022",
-    "Spring 2022": "spring2022",
-    "Winter 2022": "winter2022",
-    "Fall 2021": "fall2021",
-    "Summer 2021": "summer2021"
+    const response = await axios.get('https://www.scu.edu/apps/ws/courseavail/autocomplete/quarters/0/ugrad', {headers});
+    const data = response.data;
+    return data;
 }
 
 const get_cores = async (quarterCode) => {
@@ -90,6 +88,9 @@ const validateInput = async () => {
     let command = parseInt(prompt('Select academic quarter: '));
 
     switch (command) {
+        case 0:
+            quarter = 'Summer 2023';
+            break;
         case 1:
             quarter = 'Spring 2023'; 
             break;
@@ -119,13 +120,24 @@ const validateInput = async () => {
             break;
     } 
     
+    const quarterMap = {};
+    const quarterNameMap = {}
     const courses = {};
     const coreDict = {};
 
-    // Fetch core requirements/pathways and add it to object
-    const data = await get_cores(quarterMap[quarter]);
+    // Fetch quarters and quarter codes and add it to respective objects
+    const data_quarters = await get_quarter_map();
 
-    for (const info of data.results) {
+    for (const info of data_quarters.results['indb']) {
+        quarterMap[info['label']] = info['value'];
+        quarterNameMap[info['label']] = info['label'].toLowerCase().replace(' ', '');
+    }
+
+
+    // Fetch core requirements/pathways and add it to object
+    const data_cores = await get_cores(quarterMap[quarter]);
+
+    for (const info of data_cores.results) {
         coreDict[info['value']] = info['label'];
     }
 
@@ -133,9 +145,9 @@ const validateInput = async () => {
         console.log(`Fetching ${coreDict[core]} . . .`)
 
         // Fetch course data and add it to object
-        const data = await get_courses(core, quarterMap[quarter]);
+        const data_courses = await get_courses(core, quarterMap[quarter]);
 
-        for (const info of data.results) {
+        for (const info of data_courses.results) {
             if (info['class_nbr'] in courses) {
                 const newCore = `${courses[info['class_nbr']]['core']}, ${coreDict[core]}`
                 courses[info['class_nbr']]['core'] = newCore;
